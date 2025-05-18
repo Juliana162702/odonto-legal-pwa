@@ -1,110 +1,312 @@
 /* ==================== */
-/* LISTA DE USUÁRIOS */
+/* LISTA DE USUÁRIOS - ESTILO CASOS */
 /* ==================== */
 .users-list-container {
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .user-list-item {
     border: 1px solid #e0e0e0;
-    padding: 1rem;
-    border-radius: 0.6rem;
-    display: flex;
-    justify-content: space-between;
-    transition: all 0.2s;
+    padding: 1.5rem;
+    border-radius: 8px;
     margin-bottom: 1rem;
+    transition: all 0.2s;
+    background: #fff;
 }
 
 .user-list-item:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
 .user-list-content {
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
     cursor: pointer;
 }
 
 .user-list-main {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+    padding-right: 1.5rem;
 }
 
 .user-id {
     font-weight: bold;
     color: #8b0000;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
 }
 
 .user-name {
-    font-size: 1.1rem;
-    flex: 1;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
 }
 
 .user-role {
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
     font-size: 0.9rem;
     font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+    align-self: flex-start;
 }
 
 .role-administrador {
-    background-color: #f5f5f5;
+    background-color: rgba(139, 0, 0, 0.1);
     color: #8b0000;
-    border: 1px solid #8b0000;
+    border: 1px solid rgba(139, 0, 0, 0.3);
 }
 
 .role-perito {
-    background-color: #f5f5f5;
+    background-color: rgba(46, 125, 50, 0.1);
     color: #2e7d32;
-    border: 1px solid #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
 }
 
 .role-assistente {
-    background-color: #f5f5f5;
+    background-color: rgba(168, 0, 0, 0.1);
     color: #a80000;
-    border: 1px solid #a80000;
+    border: 1px solid rgba(168, 0, 0, 0.3);
+}
+
+.user-list-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.user-detail-group {
+    margin-bottom: 0.8rem;
+}
+
+.user-detail-group h4 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.user-detail-group p {
+    font-size: 1rem;
+    color: #333;
+    margin: 0;
+}
+
+.user-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.status-inactive {
+    background-color: rgba(168, 0, 0, 0.1);
+    color: #a80000;
+    border: 1px solid rgba(168, 0, 0, 0.3);
 }
 
 .user-email {
-    color: #666;
+    color: #444;
     margin-bottom: 0.5rem;
 }
 
 .user-meta {
     font-size: 0.9rem;
-    color: #999;
+    color: #666;
     display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.user-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+/* Estilo para quando não há usuários */
+.empty-users-message {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-users-message h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+.empty-users-message p {
+    font-size: 0.95rem;
+}
+
+/* Adaptação para mobile */
+@media (max-width: 768px) {
+    .user-list-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-list-main {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .user-list-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-actions {
+        justify-content: center;
+    }
+}
+/* ==================== */
+/* LISTA DE USUÁRIOS - ESTILO ATUALIZADO */
+/* ==================== */
+.users-list-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.user-list-item {
+    border: 1px solid #e0e0e0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+    background: #fff;
+    cursor: pointer;
+}
+
+.user-list-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.user-list-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.5rem;
+}
+
+.user-list-main {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
+    padding-right: 1.5rem;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.user-role {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.role-administrador {
+    background-color: rgba(139, 0, 0, 0.1);
+    color: #8b0000;
+    border: 1px solid rgba(139, 0, 0, 0.3);
+}
+
+.role-perito {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.role-assistente {
+    background-color: rgba(168, 0, 0, 0.1);
+    color: #a80000;
+    border: 1px solid rgba(168, 0, 0, 0.3);
+}
+
+.user-list-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
 
-/* Estilos específicos para o modal de usuário */
-#userModal .modal-content {
-    max-width: 600px;
+.user-detail-group {
+    margin-bottom: 0.8rem;
 }
 
-#userModal .form-group input,
-#userModal .form-group select {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #999;
-    border-radius: 4px;
-    font-size: 1rem;
+.user-detail-group p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0.3rem 0;
 }
 
-#userModal .form-group {
-    margin-bottom: 1.5rem;
+.user-detail-group strong {
+    color: #333;
 }
 
-#userModal .form-group label {
-    display: block;
+/* Mensagens vazias/erro */
+.empty-message, .error-message {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.empty-message h3, .error-message h3 {
+    color: #8b0000;
     margin-bottom: 0.5rem;
-    font-weight: 600;
 }
 
-#deleteBtn {
-    margin-right: auto;
+.btn-retry {
+    margin-top: 1rem;
+    background-color: #742828;
+    color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .user-list-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-list-main {
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .user-list-details {
+        grid-template-columns: 1fr;
+    }
 }
