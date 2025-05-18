@@ -21,7 +21,7 @@ const prevPageButton = document.getElementById('prev-page');
 const nextPageButton = document.getElementById('next-page');
 const currentPageSpan = document.getElementById('current-page');
 
-// Função para carregar os casos do backend
+// Carregar os casos do backend
 async function loadCases() {
   try {
     casesListContainer.innerHTML = `
@@ -30,9 +30,23 @@ async function loadCases() {
       </div>
     `;
 
-    const response = await fetch('/api/cases');
+    const token = localStorage.getItem('token'); // Pega o token salvo no login
+
+    const response = await fetch('http://localhost:3000/api/cases', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro na resposta da API: ${response.status}`);
+    }
+
     allCases = await response.json();
-    
+    console.log('Casos retornados da API:', allCases); // <- Verifique aqui no console do navegador
+
     renderCases();
     setupPagination();
   } catch (error) {
@@ -49,42 +63,37 @@ async function loadCases() {
   }
 }
 
-// Função para renderizar os casos com base nos filtros
+// Renderizar os casos com base nos filtros
 function renderCases() {
   const statusValue = filterStatus.value;
   const dateValue = filterDate.value;
   const searchValue = searchInput.value.toLowerCase();
 
-  // Aplicar filtros
+  // Filtrar
   let filteredCases = allCases.filter(caseItem => {
-    // Filtro por status
-    if (statusValue !== 'all' && caseItem.status !== statusValue) {
-      return false;
-    }
+    if (statusValue !== 'all' && caseItem.status !== statusValue) return false;
 
-    // Filtro de busca
-    if (searchValue && 
-        !caseItem.caseId.toLowerCase().includes(searchValue) && 
-        !caseItem.patientName.toLowerCase().includes(searchValue) &&
-        !caseItem.description.toLowerCase().includes(searchValue)) {
-      return false;
-    }
+    const searchIn = [
+      caseItem.caseId,
+      caseItem.patientName,
+      caseItem.description
+    ].map(item => (item || '').toLowerCase());
 
-    return true;
+    return searchIn.some(field => field.includes(searchValue));
   });
 
-  // Ordenação por data
+  // Ordenar
   filteredCases.sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
     return dateValue === 'recentes' ? dateB - dateA : dateA - dateB;
   });
 
-  // Paginação
+  // Paginar
   const startIndex = (currentPage - 1) * casesPerPage;
   const paginatedCases = filteredCases.slice(startIndex, startIndex + casesPerPage);
 
-  // Renderizar casos
+  // Exibir
   if (filteredCases.length === 0) {
     casesListContainer.innerHTML = `
       <div class="empty-message">
@@ -99,25 +108,27 @@ function renderCases() {
   paginatedCases.forEach(caseItem => {
     const caseElement = document.createElement('div');
     caseElement.className = 'case-list-item';
-    
-    // Formata a data para exibição
+
     const formattedDate = new Date(caseItem.createdAt).toLocaleDateString('pt-BR');
-    
-    // Determina a classe CSS do status
+
     let statusClass = 'status-em-andamento';
     if (caseItem.status === 'aberto') statusClass = 'status-aberto';
     else if (caseItem.status === 'pendente') statusClass = 'status-pendente';
     else if (caseItem.status === 'concluído') statusClass = 'status-concluido';
-    
+
+    const incidentDescription = caseItem.incidentDescription || '';
+    const shortIncident = incidentDescription.substring(0, 50) + (incidentDescription.length > 50 ? '...' : '');
+    const shortDescription = (caseItem.description || '').substring(0, 100) + ((caseItem.description || '').length > 100 ? '...' : '');
+
     caseElement.innerHTML = `
       <div class="case-list-content" onclick="window.location='view-case.html?id=${caseItem._id}'">
         <div class="case-list-main">
           <span class="case-id">#${caseItem.caseId}</span>
-          <h3 class="case-title">${caseItem.patientName} - ${caseItem.incidentDescription.substring(0, 50)}${caseItem.incidentDescription.length > 50 ? '...' : ''}</h3>
+          <h3 class="case-title">${caseItem.patientName} - ${shortIncident}</h3>
           <span class="case-status ${statusClass}">${caseItem.status}</span>
         </div>
         <div class="case-list-details">
-          <p class="case-description">${caseItem.description.substring(0, 100)}${caseItem.description.length > 100 ? '...' : ''}</p>
+          <p class="case-description">${shortDescription}</p>
           <div class="case-meta">
             <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
             <span><i class="fas fa-user-md"></i> ${caseItem.user?.name || 'Responsável não definido'}</span>
@@ -130,33 +141,31 @@ function renderCases() {
   });
 }
 
-// Configuração da paginação
+// Configurar paginação
 function setupPagination() {
   const statusValue = filterStatus.value;
   const searchValue = searchInput.value.toLowerCase();
-  
+
   const filteredCases = allCases.filter(caseItem => {
-    if (statusValue !== 'all' && caseItem.status !== statusValue) {
-      return false;
-    }
-    if (searchValue && 
-        !caseItem.caseId.toLowerCase().includes(searchValue) && 
-        !caseItem.patientName.toLowerCase().includes(searchValue) &&
-        !caseItem.description.toLowerCase().includes(searchValue)) {
-      return false;
-    }
-    return true;
+    if (statusValue !== 'all' && caseItem.status !== statusValue) return false;
+
+    const searchIn = [
+      caseItem.caseId,
+      caseItem.patientName,
+      caseItem.description
+    ].map(item => (item || '').toLowerCase());
+
+    return searchIn.some(field => field.includes(searchValue));
   });
 
   const totalPages = Math.ceil(filteredCases.length / casesPerPage);
-  
+
   prevPageButton.disabled = currentPage === 1;
-  nextPageButton.disabled = currentPage === totalPages || totalPages === 0;
-  
+  nextPageButton.disabled = currentPage >= totalPages;
   currentPageSpan.textContent = currentPage;
 }
 
-// Event Listeners
+// Eventos
 filterStatus.addEventListener('change', () => {
   currentPage = 1;
   renderCases();
@@ -169,7 +178,7 @@ filterDate.addEventListener('change', () => {
   setupPagination();
 });
 
-searchInput.addEventListener('keypress', (e) => {
+searchInput.addEventListener('keypress', e => {
   if (e.key === 'Enter') {
     currentPage = 1;
     renderCases();
@@ -194,22 +203,20 @@ prevPageButton.addEventListener('click', () => {
 nextPageButton.addEventListener('click', () => {
   const statusValue = filterStatus.value;
   const searchValue = searchInput.value.toLowerCase();
-  
+
   const filteredCases = allCases.filter(caseItem => {
-    if (statusValue !== 'all' && caseItem.status !== statusValue) {
-      return false;
-    }
-    if (searchValue && 
-        !caseItem.caseId.toLowerCase().includes(searchValue) && 
-        !caseItem.patientName.toLowerCase().includes(searchValue) &&
-        !caseItem.description.toLowerCase().includes(searchValue)) {
-      return false;
-    }
-    return true;
+    if (statusValue !== 'all' && caseItem.status !== statusValue) return false;
+
+    const searchIn = [
+      caseItem.caseId,
+      caseItem.patientName,
+      caseItem.description
+    ].map(item => (item || '').toLowerCase());
+
+    return searchIn.some(field => field.includes(searchValue));
   });
 
   const totalPages = Math.ceil(filteredCases.length / casesPerPage);
-  
   if (currentPage < totalPages) {
     currentPage++;
     renderCases();
@@ -219,3 +226,4 @@ nextPageButton.addEventListener('click', () => {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', loadCases);
+

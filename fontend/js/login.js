@@ -8,30 +8,34 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         const senha = document.getElementById("senha").value;
 
         try {
-            const resposta = await fetch('https://SEU_BACKEND_URL/api/login', {
+            const resposta = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                  'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ cargo, matricula, senha })
+                body: JSON.stringify({
+                  matricula: matricula,
+                  senha: senha
+                })
             });
 
             if (resposta.ok) {
                 const dados = await resposta.json();
-                // Ex: armazenar token/localStorage se for o caso
-                // localStorage.setItem('token', dados.token);
-                window.location.href = "list-case.html"; // Página após login
+                localStorage.setItem('token', dados.accessToken); // Corrigido aqui
+
+                window.location.href = "list-case.html"; // Redireciona após login
             } else {
                 const erro = await resposta.json();
-                mostrarErro(erro.mensagem || "Falha no login. Verifique suas credenciais.");
+                mostrarErro(erro.msg || "Falha no login. Verifique suas credenciais."); // Corrigido aqui
             }
         } catch (erro) {
             mostrarErro("Erro de conexão com o servidor.");
         }
+
     }
 });
 
-// Função de validação dos campos
+// Validação dos campos
 function validarLogin() {
     const cargo = document.getElementById("cargo").value;
     const matricula = document.getElementById("matricula").value;
@@ -63,7 +67,7 @@ function mostrarErro(mensagem) {
     erro.style.display = "block";
 }
 
-// Registro do Service Worker
+// Registro do Service Worker (opcional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
@@ -75,4 +79,3 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
-

@@ -522,6 +522,7 @@ a {
     text-align: center;
     padding: 2rem;
     color: #666;
+    display: none;
 }
 
 .empty-evidence-message h3 {
@@ -531,6 +532,8 @@ a {
 
 .empty-evidence-message p {
     font-size: 0.9rem;
+
+
 }
 
 /* ==================== */

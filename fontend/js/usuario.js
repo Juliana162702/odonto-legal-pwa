@@ -1,4 +1,4 @@
-const apiUrl = 'https://seu-backend.com/api/usuarios'; // Altere para sua URL real
+const apiUrl = 'http://localhost:3000/api/usuarios'; // URL do seu back-end local
 const usersContainer = document.getElementById('users-list-container');
 const userForm = document.getElementById('userForm');
 const modal = document.getElementById('userModal');
